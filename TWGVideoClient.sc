@@ -16,6 +16,7 @@ TWGVideoClient {
 			var key = msg[1], bus, val;
 			var busKeys = [\a, \b, \c, \d, \e];
 			var chanKeys = [\ear1, \ear2, \ear3, \room, \xtra, \phones];
+      //(['RECEIVED'] ++ msg).postln;
 			connected = true;
 			{gui.connectedText.string = "Connected to" + serverAddress.hostname.asString}.defer;
 			//msg.postln;
@@ -52,8 +53,9 @@ TWGVideoClient {
 					control.buses[bus].db_(val, hard: false);
 				},
         \loop, {
-					# bus, val = msg[2..3];
-					control.buses[bus].trim_(val, hard: false);
+          var on, start, end;
+					# bus, on, start, end = msg[2..5];
+					control.buses[bus].loop_(on, start, end, hard: false);
         },
 				\level, {
 					var side, peakLevel, rmsLevel;

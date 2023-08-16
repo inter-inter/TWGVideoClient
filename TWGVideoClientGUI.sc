@@ -4,7 +4,7 @@ TWGVideoClientGUI {
 
 	var <connectedText, <showText, <modeTog, <gRWTog, <gFFTog, <gFFSpeedNum, <gPPTog, <gResetBut, <gClearRoutingBut,
 	<routingGrid,
-	<bMediaMenu, <bResetBut, <bRWTog, <bPPTog, <bFFTog, <bSpeedNum, <bPosNum, <bPosSlider, <bLevel, <bGainSlider, <bGainText,
+	<bMediaMenu, <bResetBut, <bRWTog, <bPPTog, <bFFTog, <bSpeedNum, <bPosNum, <bPosSlider, <bLoopSlider, <bLoopTog, <bLevel, <bGainSlider, <bGainText,
 	<presetNum, <presetRetriggerBut,
 	<reconnectBut;
 
@@ -20,7 +20,8 @@ TWGVideoClientGUI {
 		var body_font = Font("Input Sans", 12);
 		var small_font = Font.sansSerif(10).boldVariant;
 		var smaller_font = Font.sansSerif(8).boldVariant;
-		var bounds = Rect(0, 0, 460, 620);
+    var tiny_font = Font.sansSerif(4).boldVariant;
+		var bounds = Rect(0, 0, 460, 650);
 		var m = 12;
 		var headerView, globalView, routingView, busView;
 		var ppImage, ffImage, rwImage;
@@ -33,6 +34,8 @@ TWGVideoClientGUI {
 		bSpeedNum = Array.newClear(5);
 		bPosNum = Array.newClear(5);
 		bPosSlider = Array.newClear(5);
+    bLoopSlider = Array.newClear(5);
+    bLoopTog = Array.newClear(5);
 		bLevel = Array.newClear(5);
 		bGainSlider = Array.newClear(5);
 		bGainText = Array.newClear(5);
@@ -134,7 +137,7 @@ TWGVideoClientGUI {
 		busView = {|win, bounds, index|
 			var view = View(win, bounds).background_(Color.gray(0.8));
 
-			Button(view, Rect(5, 5, 30, 20)).states_([[(index + 65).asAscii]]).font_(Font("Input Sans", 20, bold: true)).mouseDownAction_({ |view, x, y, modifiers| if (modifiers.isShift) { busButtonShiftAction.value(client.control.buses[index]) } { busButtonAction.value(client.control.buses[index]) } });
+			Button(view, Rect(5, 5, 30, 20)).states_([[(index + 65).asAscii]]).font_(Font("Input Sans", 15, bold: true)).mouseDownAction_({ |view, x, y, modifiers| if (modifiers.isShift) { busButtonShiftAction.value(client.control.buses[index]) } { busButtonAction.value(client.control.buses[index]) } });
 
 			StaticText(view, Rect(40, 6, 100, 20)).string_("Media:").font_(body_font);
 			bMediaMenu[index] = PopUpMenu(view, Rect(80, 6, 245, 20)).items_(["", ""]).font_(body_font).action_({|x|
@@ -175,19 +178,21 @@ TWGVideoClientGUI {
 				//bPosSlider[index].value_(x.value/100);
 			});
 			bPosSlider[index] = Slider(view, Rect(6, 54, bounds.width-70, 15)).action_({|x| bPosNum[index].valueAction_(x.value*100)});
+      bLoopSlider[index] = RangeSlider(view, Rect(6, 70, bounds.width-70, 15)).action_({|x| client.control.buses[index].loop_(start: x.lo * 100, end: x.hi *100)});
+      bLoopTog[index] = Button(view, Rect(bounds.width-60, 71, 30, 14)).states_([["LOOP"], ["LOOP", Color.black, Color.white]]).font_(smaller_font).action_({|x| client.control.buses[index].loop_(x.value)});
 
-			bLevel[index] = 2.collect({|i| LevelIndicator(view, Rect((bounds.width-57)+(i*15), 6, 10, bounds.height-20))
+			bLevel[index] = 2.collect({|i| LevelIndicator(view, Rect((bounds.width-57)+(i*15), 6, 10, bounds.height-32))
 				.warning_(0.9).critical_(1.0).drawsPeak_(true).numTicks_(9).numMajorTicks_(3);});
 
-			bGainSlider[index] = Slider(view, Rect(bounds.width-23, 4, 18, bounds.height-24)).action_({|x|
+			bGainSlider[index] = Slider(view, Rect(bounds.width-23, 4, 18, bounds.height-20)).action_({|x|
 				var dbval = if (x.value>0) {x.value.linlin(0, 1, -80, 0)} {-inf};
 				client.control.buses[index].db_(dbval);
 				bGainText[index].string = if (dbval == -inf) {"-inf"} {dbval.round(1).asInteger.asString};
 			});
-			bGainText[index] = StaticText(view, Rect(bounds.width-23, 34, 18, bounds.height-12)).string_("").font_(smaller_font).align_(\center);
+			bGainText[index] = StaticText(view, Rect(bounds.width-23, 34, 18, bounds.height)).string_("").font_(smaller_font).align_(\center);
 		};
 
-		5.do({|i| busView.(win, Rect(m, 173+(90*i), bounds.width-(m*2), 80), i)});
+		5.do({|i| busView.(win, Rect(m, 173+(94*i), bounds.width-(m*2), 90), i)});
 
 
 

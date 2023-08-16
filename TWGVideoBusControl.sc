@@ -95,16 +95,35 @@ TWGVideoBusControl {
 		}
 	}
 
-  loop_ {
+  loop_ { |on, start, end, hard = true|
+		if (on.isArray) {
+      # on, start, end = on
+		};
 
+    if (((loop == on) && (loopstart == start) && (loopend == end)).not ? true) {
+      loop = on ? loop ? 0;
+      loopstart = start ? loopstart ? 0;
+      loopend = end ? loopend ? 100;
+      if (hard) {this.set(\loop, [loop, loopstart, loopend])};
+			//{parent.client.gui.bSpeedNum[index].value_(speed)}.defer; set GUI here
+		}
+	}
+
+  loopstart_ { |val, hard = true|
+    if (loopstart != val) {
+      loopstart = val ? loopstart;
+      loopstart.postln;
+			if (hard) {this.set(\loop, [loop, loopstart, loopend])};
+			//{parent.client.gui.bSpeedNum[index].value_(speed)}.defer; set GUI here
+		}
   }
 
-  loopstart_ {
-
-  }
-
-  loopend_ {
-
+  loopend_ { |val, hard = true|
+    if (loopend != val) {
+      loopend = val ? loopend;
+			if (hard) {this.set(\loop, [loop, loopstart, loopend])};
+			//{parent.client.gui.bSpeedNum[index].value_(speed)}.defer; set GUI here
+		}
   }
 
 	routing {

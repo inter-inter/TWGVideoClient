@@ -63,15 +63,16 @@ TWGVideoControl {
             var on, start, end;
             case
             {v.isArray} {
-              on = v[0] ?? buses[busindex].loop;
+              on = v[0].asBoolean.asInteger ?? buses[busindex].loop;
               start = v[1] ?? buses[busindex].loopstart;
               end = v[2] ?? buses[busindex].loopend;
-            }
-            {v.isBoolean} {on = v.asInteger}
-            {v.isNumber} {on = v.asBoolean.asInteger};
-
-            msg[(busindex*7)+6] = on.asString + start.asString + end.asString;
-            buses[busindex].loop_(on.asBoolean, hard: false).loopstart_(start, hard: false).loopend_(end, hard:false);
+            } {
+              on = v.asBoolean.asInteger;
+              start = buses[busindex].loopstart;
+              end = buses[busindex].loopend;
+            };
+            msg[(busindex*7)+6] = (on.asString + start.asString + end.asString);
+            buses[busindex].loop_(on.asBoolean, start, end, hard: false);
           }
 					{k == \transport} {
 						msg[(busindex*7)+4] = (\playing: 1, \paused: 0, \ff: 2, \rw: -1)[v] ?? "n";
