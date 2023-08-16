@@ -1,0 +1,313 @@
+TITLE:: TWGVideo Setup and API
+summary:: How to set up and use the TWGVideo Class library
+categories:: TWGVideo
+related:: Classes/TWGVideoServer, Classes/TWGVideoClient, Classes/TWGVideoControl, Classes/TWGVideoBusControl
+
+SECTION:: Setup
+
+Initiate the video server on the server computer using
+code::
+~videoserver = TWGVideoServer();
+::
+
+Set up a connection to the server by initiating link::Classes/TWGVideoClient:: on a client computer with a unique name for the computer and the server computer's address.
+code::
+(
+~morticia = NetAddr("192.168.2.101", 57120);
+v = TWGVideoClient("chowder", ~morticia);
+)
+::
+
+See the bottom of this document for full example startup file, with CueList and MIDI integration.
+
+
+SECTION:: TWGVideoControl API
+
+Once a link::Classes/TWGVideoClient:: object is initiated, it returns a link::Classes/TWGVideoControl:: object which in turn contains five link::Classes/TWGVideoBusControl:: objects, accessible via the instance variables strong::a::, strong::b::, strong::c::, strong::d::, and strong::e::.
+
+code::
+v // Returns the TWGVideoControl object
+v.b // Reterns the TWGVideoBusControl object for the B bus
+::
+
+SUBSECTION:: Transport
+
+Pause, fast forward, rewind, and play an individual bus:
+
+code::
+v.a.pause
+v.a.ff
+v.a.rw
+v.a.play
+::
+
+Global pause, ff, rw, and play:
+code::
+v.pause;
+v.ff;
+v.rw;
+v.play;
+::
+
+
+SUBSECTION:: Cue & Reset
+
+The "cue" method takes arguments (media, position, speed, db). Any arguments not given will be filled with default values (media: 1, position: 0, speed: 1, db: 0).
+
+code::
+v.a.cue(4); // Play media 4 from the beginning at normal speed, full volume.
+
+v.a.cue(4, 20); // Play media 4 from position 20 at regular speed and full volume.
+
+v.a.cue(5, 42.3, 2, -inf); // Play media 5 from position 42.3 at double speed, muted.
+::
+
+The "reset" message blanks out a bus and sets everything to default values.
+
+code::
+v.a.reset; // blank out the A bus
+::
+
+NOTE::The cue and reset methods do not affect the audio routing of individual buses.::
+
+SUBSECTION:: Getting and Setting Individual Values
+
+In addition to set, play, pause, ff, rw, cue and reset, names of individual parameters can be called as methods to get or set individual values.
+
+code::
+v.b.speed; // Returns the speed of bus B.
+v.b.position = 5.6; // Set the position of bus B.
+v.preset = 3; // Set the video preset
+v.ffspeed = 48; // Set the global ff/rw speed multiplier
+v.b.transport; // Check the transport state of bus B.
+::
+
+You can send the "force" argument when setting the video preset to send a message to force the switcher to refresh outputs.
+code::
+v.preset_(3, force: true) // set to preset 3 and force refresh (will refresh even if preset is already 3)
+v.preset_(force: true) // force refresh of the current preset
+::
+
+SUBSECTION:: Speed Ramps
+If you give more than one argument to set the speed, the second is taken as a ramp time, and a third argument modifies the ramp curve.
+code::
+v.b.speed = [3, 1]; // Ramp to a speed of 3 over 1 second.
+
+v.b.speed = [1, 1, Env.shapeNumber(\sin)]; // Ramp to normal speed with a \sin shape curve. See Env documentation for list of accepted curve shapes.
+
+// Also works when passing speed to another method
+v.b.play(\speed, [-2, 1, 3])
+::
+
+SUBSECTION:: Audio Routing
+
+There are several different ways to set audio routing. The most basic way to send a message containing the complete routing of the system is to pass pairs to the "routing" setter method. Each pair is like a patch cord linking a bus or array of buses with an output or array of outputs.
+
+code::
+v.routing = [\a, \room, \b, \ear1]; // Sends bus A to the room and bus B to ear 1.
+
+v.routing = [\a, [\room, \ear1, \ear2]]; // route A bus to multiple channels
+v.routing = [[\b, \d], \ear2, [\a, \e], \room, [\a, \b, \c, \d, \e], \xtra]; // make the matrix smile
+
+v.routing = []; // clear routing
+::
+
+You can also get and set the routing of individual buses.
+code::
+v.a.routing = [\ear1, \ear2, \room]; // Sets the routing of bus A only (leaves the rest of the routing intact)
+::
+
+You can also use the "route" and "unroute" commands to turn connections on and off without overriding the current routing.
+code::
+v.b.route(\xtra); // route bus B to the extra channel without changing anything else.
+v.b.unroute(\xtra); // take it out
+::
+
+
+
+SECTION:: Advanced
+
+The "long way" to send control messages to a bus is the universal set message, which takes value pairs as arguments.
+code::
+(
+v.a.set(
+	\media, 2,
+	\position, 20,
+	\speed, 1.03,
+	\db, 0,
+	\transport, \playing,
+	\routing, [\ear1, \room]
+);
+)
+::
+
+
+Alternatively, use transport commands ("play", "pause", "ff", "rw") followed by optional value pairs.
+
+code::
+// The following two lines are equivalent:
+v.a.play(\media, 5, \position, 0)
+v.a.set(\media, 5, \position, 0, \transport, \playing)
+::
+
+NOTE::Unlike the "cue" method, "play" and "set" will NOT update any parameters not explicitly given.::
+
+If no values are given, the command will simply change the transport state of the bus, leaving other variables unchanged.
+code::
+v.a.pause
+v.a.ff
+v.a.rw
+v.a.play
+::
+The first argument of the "ff" and "rw" methods sets the global fastforward/rewind speed multiplier.
+code::
+v.a.ff(48)
+v.a.rw(24, \position, 100, \speed, 1)
+::
+
+The "reset" message blanks out a bus and sets everything to default values (optionally overriden by any pairs given)
+
+code::
+v.a.reset // ... is equivalent to...
+v.a.pause(\media, 0, \position, 0, \speed, 1, \db, 0)
+
+v.a.reset(\db, -inf) // This is modified reset message would also mute the A bus
+::
+
+
+
+SUBSECTION:: Global Methods
+
+Any of the above methods can also be used to send the same message to all buses simultaneously.
+
+code::
+v.play(\speed, 1, \db, -20) // Set all buses to playing at speed 1 and db -20 (without changing anything else)
+v.cue(2) // Start media 2 playing at default settings in all buses simultaneously
+v.reset // Clear all buses and reset to default values.
+::
+
+In addition to resetting the buses, the global reset method also clears audio routing and sets video preset and fastforward speed to default values.
+
+code::
+// These two lines are equivalent:
+v.reset
+v.pause(\media, 0, \position, 0 \speed, 1, \db, 0, \routing, [], \preset, 1, \ffspeed, 8)
+::
+
+
+SUBSECTION:: Audio routing warning
+
+WARNING::When you get the routing variable, it will return an event rather than an array of value pairs. So if you want to store the routing and then set it later, you have to use "asPairs".::
+code::
+x = v.routing
+v.routing_() // Clear routing.
+v.routing_(x) // This won't work.'
+v.routing_(x.asPairs) // This will!
+::
+
+
+SECTION:: Sample startup file
+
+code::
+
+// RATS
+
+// START CUELIST
+(
+fork {
+	0.5.wait;
+
+	defer {
+		c = CueList("/Users/gazpacho/Desktop/Cuelists/rats/")
+		.makeWindow
+		.font_(Font("Menlo", 16))
+		.colorScheme_("classic");
+
+		c.gui[\textBox].setProperty(\userCommentColor, ["Cue on:.*", Color.new255(77, 162, 75)]);
+		c.gui[\textBox].setProperty(\userCommentColor, ["Notes:.*", Color.red]);
+		c.view.collapseLevel = 0;
+	};
+
+	1.wait;
+
+	// CONNECT TO VIDEO SYSTEM
+	~thing = NetAddr("192.168.2.112", 57120);
+	defer {
+		var tb = c.view.gui.textBox;
+		var cl = c.cueList;
+		var insertText = { |string|
+			tb.setString(string, tb.selectionStart, tb.selectionSize);
+		};
+		v = TWGVideoClient("gazpacho", ~thing, \control);
+		v.client.gui.busButtonAction = { |bus|
+			if (cl.unsavedCueChanges.not) {
+				cl.addCueAfterCurrent(bus.position.round(0.01).asString ++ " media " ++ bus.media);
+				cl.incrementCueIndex;
+				insertText.("\nv." ++ (bus.index + 97).asAscii ++ ".cue(" ++ bus.media ++ ", " ++ bus.position ++ ", " ++ bus.speed ++ ");\n");
+				cl.unsavedCueChanges = true;
+			};
+		};
+		v.client.gui.busButtonShiftAction = { |bus|
+			insertText.("\nv." ++ (bus.index + 97).asAscii ++ ".cue(" ++ bus.media ++ ", " ++ bus.position ++ ", " ++ bus.speed ++ ");\n");
+			cl.unsavedCueChanges = true;
+		};
+		v.client.gui.routingButtonAction = { |bus|
+			if (cl.unsavedCueChanges.not) {
+				cl.addCueAfterCurrent("change audio routing");
+				cl.incrementCueIndex;
+				if (bus.isNil) {
+					insertText.("\nv.routing = " ++ v.routing.asPairs.asCompileString ++ ";\n");
+				} {
+					insertText.("\nv." ++ (bus.index + 97).asAscii ++ ".routing = " ++ bus.routing.asCompileString ++ ";\n");
+				};
+			};
+			cl.unsavedCueChanges = true;
+		};
+		v.client.gui.routingButtonShiftAction = { |bus|
+			if (bus.isNil) {
+				insertText.("\nv.routing = " ++ v.routing.asPairs.asCompileString ++ ";\n");
+			} {
+				insertText.("\nv." ++ (bus.index + 97).asAscii ++ ".routing = " ++ bus.routing.asCompileString ++ ";\n");
+			};
+			cl.unsavedCueChanges = true;
+		};
+		c.toFrontAction = { v.client.gui.win.front };
+	};
+
+	// CONNECT MIDI CONTROLLER
+	MIDIIn.connectAll;
+
+	MIDIdef.noteOn(\akai, {|val, num, chan, src|
+		num.postln;
+		defer {
+			case
+			{ num == 48 } { v.client.gui.gRWTog.valueAction_(1) }
+			{ num == 49 } { v.client.gui.gFFTog.valueAction_(1) }
+			{ num == 50 } { v.client.gui.gPPTog.valueAction_(1) }
+			{ num == 51 } { c.cueList.executeCurrentCue }
+			{ num == 46 } { v.client.gui.gPPTog.valueAction_(0) }
+			{ num == 47 } { c.cueList.decrementCueIndex }
+			{ num == 40 } { v.client.gui.bRWTog[0].valueAction_(1) }
+			{ num == 41 } { v.client.gui.bFFTog[0].valueAction_(1) }
+			{ num == 42 } { v.client.gui.bRWTog[1].valueAction_(1) }
+			{ num == 43 } { v.client.gui.bFFTog[1].valueAction_(1) }
+			{ num == 36 } { v.client.gui.bPPTog[0].valueAction_(1) }
+			{ num == 37 } { v.client.gui.bPPTog[0].valueAction_(0) }
+			{ num == 38 } { v.client.gui.bPPTog[1].valueAction_(1) }
+			{ num == 39 } { v.client.gui.bPPTog[1].valueAction_(0) }
+		}
+	}, chan: 9
+	);
+};
+)
+
+
+
+/*
+
+// TOAST
+
+~morticia = NetAddr("192.168.2.101", 57120);
+v = TWGVideoClient("gazpacho", ~morticia, \monitor);
+
+::

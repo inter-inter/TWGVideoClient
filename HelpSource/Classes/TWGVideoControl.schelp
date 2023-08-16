@@ -1,0 +1,236 @@
+TITLE:: TWGVideoControl
+summary:: Control module for the TWGVideoClient component of the TWGVideo system.
+categories:: TWGVideo
+related:: Classes/TWGVideoClient, Classes/TWGVideoBusControl, Guides/TWGVideo Setup and API
+
+DESCRIPTION::
+Houses convenience functions for generating OSC messages to TWGVideoServer
+
+
+CLASSMETHODS::
+
+METHOD:: new
+(describe method here)
+
+ARGUMENT:: client
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+
+INSTANCEMETHODS::
+
+METHOD:: rw
+(describe method here)
+
+ARGUMENT:: setFFspeed
+(describe argument here)
+
+ARGUMENT::  ... pairs
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: position
+(describe method here)
+
+ARGUMENT:: val
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: routing
+(describe method here)
+
+ARGUMENT::  ... vals
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: c
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: init
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: client
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: forcepreset
+(describe method here)
+
+ARGUMENT:: val
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: buses
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: speed
+(describe method here)
+
+ARGUMENT::  ... vals
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: media
+(describe method here)
+
+ARGUMENT:: val
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: reset
+(describe method here)
+
+ARGUMENT::  ... pairs
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: transport
+(describe method here)
+
+ARGUMENT:: val
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: play
+(describe method here)
+
+ARGUMENT::  ... pairs
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: e
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: pause
+(describe method here)
+
+ARGUMENT::  ... pairs
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: db
+(describe method here)
+
+ARGUMENT:: val
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: preset
+(describe method here)
+
+ARGUMENT:: val
+(describe argument here)
+
+ARGUMENT:: force
+(describe argument here)
+
+ARGUMENT:: hard
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: d
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: cue
+(describe method here)
+
+ARGUMENT:: media
+(describe argument here)
+
+ARGUMENT:: position
+(describe argument here)
+
+ARGUMENT:: speed
+(describe argument here)
+
+ARGUMENT:: db
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: ff
+(describe method here)
+
+ARGUMENT:: setFFspeed
+(describe argument here)
+
+ARGUMENT::  ... pairs
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: a
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: ffspeed
+(describe method here)
+
+ARGUMENT:: val
+(describe argument here)
+
+ARGUMENT:: hard
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: set
+(describe method here)
+
+ARGUMENT::  ... pairs
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: route
+(describe method here)
+
+ARGUMENT::  ... vals
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: b
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: unroute
+(describe method here)
+
+ARGUMENT::  ... vals
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+
+EXAMPLES::
+
+code::
+(some example code)
+::

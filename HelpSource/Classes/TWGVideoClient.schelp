@@ -1,0 +1,65 @@
+TITLE:: TWGVideoClient
+summary:: Network client control module for the TWGVideo system.
+categories:: TWGVideo
+related:: Classes/TWGVideoServer, Classes/TWGVideoControl, Guides/TWGVideo Setup and API
+
+DESCRIPTION::
+TWGVideo is a library of classes developed to facilitate the control and synchronization of five audiovisual channels (buses) across a network with VCR-style functionalilty.
+
+link::Classes/TWGVideoClient:: works in tandem with a link::Classes/TWGVideoControl:: object, which contains a wide range of convenience methods for sending control messages to the connected link::Classes/TWGVideoServer::. Methods can be executed directly in SuperCollider or through the link::Classes/TWGVideoClientGUI:: which opens in a window upon startup.
+
+
+CLASSMETHODS::
+
+METHOD:: new
+Create a new link::Classes/TWGVideoClient:: object.
+
+ARGUMENT:: name
+A unique name for this client (required).
+
+ARGUMENT:: serverAddress
+The link::Classes/NetAddr:: of the link::Classes/TWGVideoServer:: to which this client will send messages (required).
+
+ARGUMENT:: mode
+Optionally initiate the client's strong::mode:: variable. If set to code::control::, the client will operate with full functionality. If anything else, the client will open in "monitor" mode, meaning it will receive and display information from the server in the GUI but will not send control messages.
+
+returns:: This client's child link::Classes/TWGVideoControl:: object. **Note: The code::.new:: method returns a link::Classes/TWGVideoControl:: object for convenience so that the instance variable used on initiation can immeiately be used to call control methods. To access link::Classes/TWGVideoClient::, use the code::TWGVideoControl.client:: method.
+
+
+INSTANCEMETHODS::
+
+METHOD:: serverAddress
+
+returns:: The link::Classes/NetAddr:: to which this client will connect and send messages.
+
+METHOD:: control
+
+returns:: This client's child link::Classes/TWGVideoControl:: object.
+
+METHOD:: name
+
+returns:: This client's name.
+
+METHOD:: quit
+End this client's connection to the server and close the GUI window.
+
+METHOD:: mode
+Get or set the client's mode (see above).
+
+METHOD:: connect
+Try to establish a connection with the server. This method is called by clicking the "Reconnect" button in the GUI window.
+
+METHOD:: connected
+
+returns:: link::Classes/True:: if the client has successfully established a connection to the server.
+
+METHOD:: gui
+
+returns:: This client's child link::Classes/TWGVideoControl:: object.
+
+
+EXAMPLES::
+
+code::
+(some example code)
+::
