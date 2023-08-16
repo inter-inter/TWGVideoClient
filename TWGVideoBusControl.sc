@@ -105,16 +105,19 @@ TWGVideoBusControl {
       loopstart = start ? loopstart ? 0;
       loopend = end ? loopend ? 100;
       if (hard) {this.set(\loop, [loop, loopstart, loopend])};
-			//{parent.client.gui.bSpeedNum[index].value_(speed)}.defer; set GUI here
+      {
+        parent.client.gui.bLoopTog[index].value_(loop);
+        parent.client.gui.bLoopSlider[index].lo_(loopstart * 0.01);
+        parent.client.gui.bLoopSlider[index].hi_(loopend * 0.01);
+      }.defer;
 		}
 	}
 
   loopstart_ { |val, hard = true|
     if (loopstart != val) {
       loopstart = val ? loopstart;
-      loopstart.postln;
 			if (hard) {this.set(\loop, [loop, loopstart, loopend])};
-			//{parent.client.gui.bSpeedNum[index].value_(speed)}.defer; set GUI here
+			{parent.client.gui.bLoopSlider[index].lo_(loopstart * 0.01)}.defer;
 		}
   }
 
@@ -122,7 +125,7 @@ TWGVideoBusControl {
     if (loopend != val) {
       loopend = val ? loopend;
 			if (hard) {this.set(\loop, [loop, loopstart, loopend])};
-			//{parent.client.gui.bSpeedNum[index].value_(speed)}.defer; set GUI here
+			{parent.client.gui.bLoopSlider[index].hi_(loopend * 0.01)}.defer;
 		}
   }
 
