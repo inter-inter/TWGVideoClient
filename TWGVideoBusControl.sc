@@ -37,17 +37,18 @@ TWGVideoBusControl {
 		parent.set(\ffspeed, setFFspeed, busSym, [\transport, \rw] ++ pairs)
 	}
 
-	cue { |media, position, speed, db|
+	cue { |media, position, speed, db, loop|
 		this.play(
-			\media, media ?? 1,
-			\position, position ?? 0,
-			\speed, speed ?? 1,
-			\db, db ?? 0
+			\media, media ? 1,
+			\position, position ? 0,
+			\speed, speed ? 1,
+			\db, db ? 0,
+      \loop, loop ? false
 		)
 	}
 
 	reset { |...pairs|
-		this.pause(\media, 0, \position, 0, \speed, 1, \db, 0, *pairs);
+		this.pause(\media, 0, \position, 0, \speed, 1, \db, 0, \loop, [false, 0, 100], *pairs);
 	}
 
 	media_ { |val, hard = true|
@@ -66,17 +67,18 @@ TWGVideoBusControl {
 		}
 	}
 
-	speed_ { |setSpeed, ramp = 0, curve = 1, hard = true|
-		if (setSpeed.isArray && ramp.isNil) {
-			curve = setSpeed[2] ?? 1;
-			ramp = setSpeed[1] ?? 0;
-			setSpeed = setSpeed[0];
+	speed_ { |setSpeed, ramp = 0, curve = 3, pitch = 0, hard = true|
+		if (setSpeed.isArray) {
+      ramp = setSpeed[1] ? 0;
+      curve = setSpeed[2] ? 3;
+      pitch = setSpeed[3].asBoolean.asInteger ? 0;
+			setSpeed = setSpeed[0] ? speed;
 		};
-		if (speed != setSpeed) {
-      if (hard) {this.set(\speed, [setSpeed, ramp, curve])};
-			speed = setSpeed;
-			{parent.client.gui.bSpeedNum[index].value_(speed)}.defer;
-		}
+		//if (speed != setSpeed) { // removing this because it would be impossible to change curve or pitch while keeping speed the same
+    speed = setSpeed ? speed;
+    if (hard) {this.set(\speed, [speed, ramp, curve, pitch])};
+    {parent.client.gui.bSpeedNum[index].value_(speed)}.defer;
+		//}
 	}
 
 	db_ { |val, hard = true|
