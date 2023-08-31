@@ -191,7 +191,7 @@ TWGVideoControl {
   }
 
   speed_ { |...vals|
-    this.set(\speed, vals);
+    this.set(\speed, vals); // update to match TWGVideoBusControl
   }
 
   db_ { |val|
@@ -199,7 +199,7 @@ TWGVideoControl {
   }
 
   loop_ { |...vals|
-    this.set(\loop, vals);
+    this.set(\loop, vals); // update to match TWGVideoBusControl
   }
 
   transport_{ |val|

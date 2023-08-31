@@ -20,7 +20,7 @@ TWGVideoClientGUI {
 		var body_font = Font("Input Sans", 12);
 		var small_font = Font.sansSerif(10).boldVariant;
 		var smaller_font = Font.sansSerif(8).boldVariant;
-    var tiny_font = Font.sansSerif(4).boldVariant;
+		var tiny_font = Font.sansSerif(4).boldVariant;
 		var bounds = Rect(0, 0, 460, 650);
 		var m = 12;
 		var headerView, globalView, routingView, busView;
@@ -34,8 +34,8 @@ TWGVideoClientGUI {
 		bSpeedNum = Array.newClear(5);
 		bPosNum = Array.newClear(5);
 		bPosSlider = Array.newClear(5);
-    bLoopSlider = Array.newClear(5);
-    bLoopTog = Array.newClear(5);
+		bLoopSlider = Array.newClear(5);
+		bLoopTog = Array.newClear(5);
 		bLevel = Array.newClear(5);
 		bGainSlider = Array.newClear(5);
 		bGainText = Array.newClear(5);
@@ -74,9 +74,9 @@ TWGVideoClientGUI {
 		globalView = {|win, bounds|
 			var view = View(win, bounds);
 
-			gRWTog = Button(view, Rect(0, 0, 45, 40)).states_([[""], ["", Color.black, Color.white]]).font_(body_font).icon_(rwImage).iconSize_(25).action_({|x| bRWTog.do(_.valueAction_(x.value)); gPPTog.value_(0); gFFTog.value_(0)});
-			gPPTog = Button(view, Rect(48, 0, bounds.width-96, 40)).states_([[""], ["", Color.black, Color.white]]).font_(body_font).icon_(ppImage).iconSize_(28).action_({|x| bPPTog.do(_.valueAction_(x.value)); gRWTog.value_(0); gFFTog.value_(0)});
-			gFFTog = Button(view, Rect(bounds.width-46, 0, 45, 40)).states_([[""], ["", Color.black, Color.white]]).font_(body_font).icon_(ffImage).iconSize_(25).action_({|x| bFFTog.do(_.valueAction_(x.value)); gPPTog.value_(0); gRWTog.value_(0)});
+			gRWTog = Button(view, Rect(0, 0, 45, 40)).states_([[""], ["", Color.black, Color.blue(1, 0.5)]]).font_(body_font).icon_(rwImage).iconSize_(25).action_({|x| bRWTog.do(_.valueAction_(x.value)); gPPTog.value_(0); gFFTog.value_(0)});
+			gPPTog = Button(view, Rect(48, 0, bounds.width-96, 40)).states_([[""], ["", Color.black, Color.green(1, 0.5)]]).font_(body_font).icon_(ppImage).iconSize_(28).action_({|x| bPPTog.do(_.valueAction_(x.value)); gRWTog.value_(0); gFFTog.value_(0)});
+			gFFTog = Button(view, Rect(bounds.width-46, 0, 45, 40)).states_([[""], ["", Color.black, Color.blue(1, 0.5)]]).font_(body_font).icon_(ffImage).iconSize_(25).action_({|x| bFFTog.do(_.valueAction_(x.value)); gPPTog.value_(0); gRWTog.value_(0)});
 
 			StaticText(view, Rect(0, 46, 60, 19)).string_("FF Speed:").font_(body_font);
 			gFFSpeedNum = NumberBox(view, Rect(60, 46, 40, 19)).decimals_(2).scroll_step_(0.1).font_(body_font).value_(12).action_({|x| client.control.ffspeed_(x.value)});
@@ -90,7 +90,7 @@ TWGVideoClientGUI {
 			gResetBut = Button(view, Rect(0, 70, (bounds.width/2)-2, 23)).string_("Reset All").font_(body_font).action_({ |x|
 				bResetBut.do(_.valueAction_(x.value));
 				gRWTog.value_(0); gFFTog.value_(0); gRWTog.value_(0); gFFTog.value_(0); gPPTog.value_(0)
-		});
+			});
 			gClearRoutingBut = Button(view, Rect(bounds.width/2, 70, (bounds.width/2)-2, 23)).string_("Clear Routing").font_(body_font).action_(
 				//{|x| bResetBut.do(_.valueAction_(x.value)); gRWTog.value_(0); gFFTog.value_(0); gRWTog.value_(0); gFFTog.value_(0); gPPTog.value_(0)}
 				{client.control.routing_([])}
@@ -154,17 +154,17 @@ TWGVideoClientGUI {
 				this.setGain(index, 0);
 			};);
 
-			bRWTog[index] = Button(view, Rect(6, 30, 55, 20)).states_([[""], ["", Color.black, Color.white]]).font_(body_font).icon_(rwImage).iconSize_(11).action_(
+			bRWTog[index] = Button(view, Rect(6, 30, 55, 20)).states_([[""], ["", Color.black, Color.blue(1, 0.5)]]).font_(body_font).icon_(rwImage).iconSize_(11).action_(
 				{|x| switch (x.value,
 					0, {client.control.buses[index].pause; this.setTransport(index, \paused)},
 					1, {client.control.buses[index].rw; this.setTransport(index, \rw)});
 			});
-			bPPTog[index] = Button(view, Rect(65, 30, 55, 20)).states_([[""], ["", Color.black, Color.white]]).font_(body_font).icon_(ppImage).iconSize_(12).action_(
+			bPPTog[index] = Button(view, Rect(65, 30, 55, 20)).states_([[""], ["", Color.black, Color.green(1, 0.5)]]).font_(body_font).icon_(ppImage).iconSize_(12).action_(
 				{|x| switch (x.value,
 					0, {client.control.buses[index].pause; this.setTransport(index, \paused)},
 					1, {client.control.buses[index].play; this.setTransport(index, \playing)});
 			});
-			bFFTog[index] = Button(view, Rect(126, 30, 55, 20)).states_([[""], ["", Color.black, Color.white]]).font_(body_font).icon_(ffImage).iconSize_(11).action_(
+			bFFTog[index] = Button(view, Rect(126, 30, 55, 20)).states_([[""], ["", Color.black, Color.blue(1, 0.5)]]).font_(body_font).icon_(ffImage).iconSize_(11).action_(
 				{|x| switch (x.value,
 					0, {client.control.buses[index].pause; this.setTransport(index, \paused)},
 					1, {client.control.buses[index].ff; this.setTransport(index, \ff)});
@@ -178,8 +178,8 @@ TWGVideoClientGUI {
 				//bPosSlider[index].value_(x.value/100);
 			});
 			bPosSlider[index] = Slider(view, Rect(6, 54, bounds.width-70, 15)).action_({|x| bPosNum[index].valueAction_(x.value*100)});
-      bLoopSlider[index] = RangeSlider(view, Rect(6, 70, bounds.width-70, 15)).action_({|x| client.control.buses[index].loop_(start: x.lo * 100, end: x.hi *100)});
-      bLoopTog[index] = Button(view, Rect(bounds.width-60, 71, 30, 14)).states_([["LOOP"], ["LOOP", Color.black, Color.white]]).font_(smaller_font).action_({|x| client.control.buses[index].loop_(x.value)});
+			bLoopSlider[index] = RangeSlider(view, Rect(6, 70, bounds.width-70, 15)).knobColor_(Color.grey).action_({|x| client.control.buses[index].loop_(start: x.lo * 100, end: x.hi *100)});
+      bLoopTog[index] = Button(view, Rect(bounds.width-60, 71, 30, 14)).states_([["LOOP"], ["LOOP", Color.black, Color.yellow]]).font_(smaller_font).action_({|x| this.bLoopSlider[index].knobColor_([Color.grey, Color.yellow][x.value]); client.control.buses[index].loop_(x.value)});
 
 			bLevel[index] = 2.collect({|i| LevelIndicator(view, Rect((bounds.width-57)+(i*15), 6, 10, bounds.height-32))
 				.warning_(0.9).critical_(1.0).drawsPeak_(true).numTicks_(9).numMajorTicks_(3);});

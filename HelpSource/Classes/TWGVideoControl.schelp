@@ -4,84 +4,76 @@ categories:: TWGVideo
 related:: Classes/TWGVideoClient, Classes/TWGVideoBusControl, Guides/TWGVideo Setup and API
 
 DESCRIPTION::
-Houses convenience functions for generating OSC messages to TWGVideoServer
+link::Classes/TWGVideoControl:: houses convenience functions for generating OSC messages to link::Classes/TWGVideoServer:: through a parent link::Classes/TWGVideoClient:: object. Five child link::Classes/TWGVideoBusControl:: objects may be accessed to generate messages to individual media buses.
 
 
 CLASSMETHODS::
 
 METHOD:: new
-(describe method here)
 
 ARGUMENT:: client
-(describe argument here)
+A link::Classes/TWGVideoClient::
 
-returns:: (describe returnvalue here)
+returns:: A new link::Classes/TWGVideoControl:: to generate messages through a specified client.
 
+NOTE:: Typically you should not need to use this command, since a link::Classes/TWGVideoClient:: will generate its own link::Classes/TWGVideoControl:: on initiation.::
 
 INSTANCEMETHODS::
 
 METHOD:: rw
-(describe method here)
+Set transport of all buses to rewind
 
 ARGUMENT:: setFFspeed
-(describe argument here)
+Set new global fast-forward/rewind speed multiplier
 
 ARGUMENT::  ... pairs
-(describe argument here)
-
-returns:: (describe returnvalue here)
+Set other bus parameters as a list of comma-separated key/value argument pairs
 
 METHOD:: position
-(describe method here)
+Set position of all buses
 
 ARGUMENT:: val
-(describe argument here)
-
-returns:: (describe returnvalue here)
+Position percentage value
 
 METHOD:: routing
-(describe method here)
+Get or set audio matrix routing.
 
 ARGUMENT::  ... vals
-(describe argument here)
+Set routing as a list of connection pairs. Inputs are code::\a::, code::\b::, code::\c::, code::\d::, and code::\e::. Outputs are code::\ear1::, code::\ear2::, code::\ear3::, code::\room::, code::\xtra::, and code::\phones::. Arrays for multiple inputs/outputs are accepted. See Guides/TWGVideo Setup and API for more information.
 
-returns:: (describe returnvalue here)
+returns:: Current audio routing as an Event.
+
+WARNING::When you get the routing variable, it will return an event rather than an array of value pairs. So if you want to store the routing and then set it later, you have to use "asPairs".::
+code::
+x = v.routing
+v.routing_() // Clear routing.
+v.routing_(x) // This won't work.'
+v.routing_(x.asPairs) // This will!
+::
 
 METHOD:: c
-(describe method here)
 
-returns:: (describe returnvalue here)
-
-METHOD:: init
-(describe method here)
-
-returns:: (describe returnvalue here)
+returns:: The link::Classes/TWGVideoControl:: corresponding to the C bus
 
 METHOD:: client
-(describe method here)
 
-returns:: (describe returnvalue here)
+returns:: The parent link::Classes/TWGVideoClient::
 
 METHOD:: forcepreset
-(describe method here)
+An alternative to the code::preset:: method which tells the video server to force a refresh of the matrix preset setting even if it has not changed.
 
 ARGUMENT:: val
-(describe argument here)
-
-returns:: (describe returnvalue here)
+Preset value
 
 METHOD:: buses
-(describe method here)
 
-returns:: (describe returnvalue here)
+returns:: An array containing the five linked link::Classes/TWGVideoBusControl:: objects.
 
 METHOD:: speed
-(describe method here)
+Set the speed of all buses.
 
 ARGUMENT::  ... vals
 (describe argument here)
-
-returns:: (describe returnvalue here)
 
 METHOD:: media
 (describe method here)
@@ -168,6 +160,9 @@ ARGUMENT:: speed
 (describe argument here)
 
 ARGUMENT:: db
+(describe argument here)
+
+ARGUMENT:: loop
 (describe argument here)
 
 returns:: (describe returnvalue here)
