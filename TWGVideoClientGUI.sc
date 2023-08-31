@@ -3,7 +3,7 @@ TWGVideoClientGUI {
 	var <win;
 
 	var <connectedText, <showText, <modeTog, <gRWTog, <gFFTog, <gFFSpeedNum, <gPPTog, <gResetBut, <gClearRoutingBut,
-	<routingGrid,
+	<routingGrid, <>mediaList, <>mediaNums,
 	<bMediaMenu, <bResetBut, <bRWTog, <bPPTog, <bFFTog, <bSpeedNum, <bPosNum, <bPosSlider, <bLoopSlider, <bLoopTog, <bLevel, <bGainSlider, <bGainText,
 	<presetNum, <presetRetriggerBut,
 	<reconnectBut;
@@ -44,6 +44,9 @@ TWGVideoClientGUI {
 		ffImage = Image.open("icons/ff.png".resolveRelative);
 		rwImage = Image.open("icons/rw.png".resolveRelative);
 
+    mediaList = [];
+    mediaNums = [];
+
 		win = Window("TWG Video Client: " + client.name, bounds.center_(Point(1200, 500))).front;
 		win.onClose = {client.quit};
 
@@ -74,9 +77,9 @@ TWGVideoClientGUI {
 		globalView = {|win, bounds|
 			var view = View(win, bounds);
 
-			gRWTog = Button(view, Rect(0, 0, 45, 40)).states_([[""], ["", Color.black, Color.blue(1, 0.5)]]).font_(body_font).icon_(rwImage).iconSize_(25).action_({|x| bRWTog.do(_.valueAction_(x.value)); gPPTog.value_(0); gFFTog.value_(0)});
-			gPPTog = Button(view, Rect(48, 0, bounds.width-96, 40)).states_([[""], ["", Color.black, Color.green(1, 0.5)]]).font_(body_font).icon_(ppImage).iconSize_(28).action_({|x| bPPTog.do(_.valueAction_(x.value)); gRWTog.value_(0); gFFTog.value_(0)});
-			gFFTog = Button(view, Rect(bounds.width-46, 0, 45, 40)).states_([[""], ["", Color.black, Color.blue(1, 0.5)]]).font_(body_font).icon_(ffImage).iconSize_(25).action_({|x| bFFTog.do(_.valueAction_(x.value)); gPPTog.value_(0); gRWTog.value_(0)});
+			gRWTog = Button(view, Rect(0, 0, 45, 40)).states_([[""], ["", Color.black, Color.blue(1, 0.5)]]).font_(body_font).icon_(rwImage).iconSize_(25).action_({|x| bRWTog.do(_.valueAction_(x.value)); gPPTog.value_(0); gFFTog.value_(0)}).value_(0);
+      gPPTog = Button(view, Rect(48, 0, bounds.width-96, 40)).states_([[""], ["", Color.black, Color.green(1, 0.5)]]).font_(body_font).icon_(ppImage).iconSize_(28).action_({|x| bPPTog.do(_.valueAction_(x.value)); gRWTog.value_(0); gFFTog.value_(0)}).value_(0);
+			gFFTog = Button(view, Rect(bounds.width-46, 0, 45, 40)).states_([[""], ["", Color.black, Color.blue(1, 0.5)]]).font_(body_font).icon_(ffImage).iconSize_(25).action_({|x| bFFTog.do(_.valueAction_(x.value)); gPPTog.value_(0); gRWTog.value_(0)}).value_(0);
 
 			StaticText(view, Rect(0, 46, 60, 19)).string_("FF Speed:").font_(body_font);
 			gFFSpeedNum = NumberBox(view, Rect(60, 46, 40, 19)).decimals_(2).scroll_step_(0.1).font_(body_font).value_(12).action_({|x| client.control.ffspeed_(x.value)});
@@ -141,7 +144,7 @@ TWGVideoClientGUI {
 
 			StaticText(view, Rect(40, 6, 100, 20)).string_("Media:").font_(body_font);
 			bMediaMenu[index] = PopUpMenu(view, Rect(80, 6, 245, 20)).items_(["", ""]).font_(body_font).action_({|x|
-				client.control.buses[index].set(\media, x.value, \position, 0, \transport, \paused);
+				client.control.buses[index].set(\media, mediaNums[x.value - 1] ? 0, \position, 0, \transport, \paused);
 				bSpeedNum[index].value_(1);
 				this.setPos(index, 0);
 				this.setGain(index, 0);
@@ -150,6 +153,8 @@ TWGVideoClientGUI {
 				client.control.buses[index].reset;
 				bMediaMenu[index].value_(0);
 				bSpeedNum[index].value_(1);
+        bLoopTog[index].value_(0);
+        bLoopSlider[index].knobColor_(Color.grey);
 				this.setPos(index, 0);
 				this.setGain(index, 0);
 			};);
@@ -158,17 +163,17 @@ TWGVideoClientGUI {
 				{|x| switch (x.value,
 					0, {client.control.buses[index].pause; this.setTransport(index, \paused)},
 					1, {client.control.buses[index].rw; this.setTransport(index, \rw)});
-			});
+			}).value_(0);
 			bPPTog[index] = Button(view, Rect(65, 30, 55, 20)).states_([[""], ["", Color.black, Color.green(1, 0.5)]]).font_(body_font).icon_(ppImage).iconSize_(12).action_(
 				{|x| switch (x.value,
 					0, {client.control.buses[index].pause; this.setTransport(index, \paused)},
 					1, {client.control.buses[index].play; this.setTransport(index, \playing)});
-			});
+			}).value_(0);
 			bFFTog[index] = Button(view, Rect(126, 30, 55, 20)).states_([[""], ["", Color.black, Color.blue(1, 0.5)]]).font_(body_font).icon_(ffImage).iconSize_(11).action_(
 				{|x| switch (x.value,
 					0, {client.control.buses[index].pause; this.setTransport(index, \paused)},
 					1, {client.control.buses[index].ff; this.setTransport(index, \ff)});
-			});
+			}).value_(0);
 			StaticText(view, Rect(189, 30, 42, 20)).string_("Speed:").font_(body_font);
 			bSpeedNum[index] = NumberBox(view, Rect(231, 30, 42, 20)).decimals_(2).scroll_step_(0.1).font_(body_font).value_(1).action_({|x| client.control.buses[index].speed_(x.value)});
 

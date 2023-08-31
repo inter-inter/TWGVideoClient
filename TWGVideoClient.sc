@@ -22,9 +22,10 @@ TWGVideoClient {
 			//msg.postln;
 			switch (key,
 				\showinfo, {{
+          gui.mediaList = msg[3..].sort({|a, b| a.asString[..2].asInteger < b.asString[..2].asInteger});
+          gui.mediaNums = gui.mediaList.collect({|x| x.asString[..2].asInteger});
 					gui.showText.string = "Show: " + (msg[2] ?? "");
-					gui.bMediaMenu.do({ |menu, index|
-						menu.items_([""]++msg[3..].collect({|item, i| (i+1).asString ++ "  " ++ item})).value_(control.buses[index].media ?? 0);
+					gui.bMediaMenu.do({ |menu, index| menu.items_([""] ++ gui.mediaList).value_(control.buses[index].media ?? 0);
 						}
 					);
 				}.defer},
@@ -93,7 +94,8 @@ TWGVideoClient {
 		^control = TWGVideoControl(this);
 	}
 
-	connect {
+	connect { |address|
+    serverAddress = address ? serverAddress;
 		serverAddress.sendMsg('/ping', name);
 	}
 

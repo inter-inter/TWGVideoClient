@@ -143,7 +143,6 @@ TWGVideoControl {
       this.routing_(*setRouting.asPairs ++ false);
     };
 
-    msg.debug("set");
     if (client.mode == \control) {client.serverAddress.sendMsg('/fromsm', *msg)};
 
   }

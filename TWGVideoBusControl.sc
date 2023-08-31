@@ -55,7 +55,9 @@ TWGVideoBusControl {
 		if (media != val) {
 			if (hard) {this.set(\media, val)};
 			media = val;
-			{parent.client.gui.bMediaMenu[index].value_(val)}.defer;
+			{
+        var gui = parent.client.gui;
+        gui.bMediaMenu[index].value_(gui.mediaList[gui.mediaNums.indexOf(val) ? 0])}.defer;
 		}
 	}
 
