@@ -29,12 +29,12 @@ TWGVideoBusControl {
 		parent.set(busSym, [\transport, \paused] ++ pairs)
 	}
 
-	ff { |setFFspeed ...pairs|
-		parent.set(\ffspeed, setFFspeed, busSym, [\transport, \ff] ++ pairs)
+	ff { |val ...pairs|
+		parent.set(\ffspeed, val, busSym, [\transport, \ff] ++ pairs)
 	}
 
-	rw { |setFFspeed ...pairs|
-		parent.set(\ffspeed, setFFspeed, busSym, [\transport, \rw] ++ pairs)
+	rw { |val ...pairs|
+		parent.set(\ffspeed, val, busSym, [\transport, \rw] ++ pairs)
 	}
 
 	cue { |media, position, speed, db, loop|
@@ -69,15 +69,15 @@ TWGVideoBusControl {
 		}
 	}
 
-	speed_ { |setSpeed, ramp = 0, curve = 3, pitch = 0, hard = true|
-		if (setSpeed.isArray) {
-      ramp = setSpeed[1] ? 0;
-      curve = setSpeed[2] ? 3;
-      pitch = setSpeed[3].asBoolean.asInteger ? 0;
-			setSpeed = setSpeed[0] ? speed;
+	speed_ { |val, ramp = 0, curve = 3, pitch = 0, hard = true|
+		if (val.isArray) {
+      ramp = val[1] ? 0;
+      curve = val[2] ? 3;
+      pitch = val[3].asBoolean.asInteger ? 0;
+			val = val[0] ? speed;
 		};
 		//if (speed != setSpeed) { // removing this because it would be impossible to change curve or pitch while keeping speed the same
-    speed = setSpeed ? speed;
+    speed = val ? speed;
     if (hard) {this.set(\speed, [speed, ramp, curve, pitch])};
     {parent.client.gui.bSpeedNum[index].value_(speed)}.defer;
 		//}

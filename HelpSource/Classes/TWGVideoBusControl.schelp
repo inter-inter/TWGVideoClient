@@ -4,196 +4,203 @@ categories:: TWGVideo
 related:: Classes/TWGVideoControl, Guides/TWGVideo Setup and API
 
 DESCRIPTION::
-(put long description here)
+link::Classes/TWGVideoBusControl:: generates messages directed to a single bus on a link::Classes/TWGVideoServer:: through the parent link::Classes/TWGVideoControl:: object.
 
+See link::Guides/TWGVideo Setup and API:: for usage examples.
 
 CLASSMETHODS::
 
 METHOD:: new
-(describe method here)
+Create an instance of link::Classes/TWGVideoBusControl::. (This is called automatically by link::Classes/TWGVideoControl::).
 
 ARGUMENT:: parent
-(describe argument here)
+Parent link::Classes/TWGVideoControl:: object
 
 ARGUMENT:: index
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
+Bus index
 
 INSTANCEMETHODS::
 
-METHOD:: cue
-(describe method here)
-
-ARGUMENT:: media
-(describe argument here)
-
-ARGUMENT:: position
-(describe argument here)
-
-ARGUMENT:: speed
-(describe argument here)
-
-ARGUMENT:: db
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: transport
-(describe method here)
-
-ARGUMENT:: val
-(describe argument here)
-
-ARGUMENT:: hard
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: media
-(describe method here)
-
-ARGUMENT:: val
-(describe argument here)
-
-ARGUMENT:: hard
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: pause
-(describe method here)
-
-ARGUMENT::  ... pairs
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: db
-(describe method here)
-
-ARGUMENT:: val
-(describe argument here)
-
-ARGUMENT:: hard
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: route
-(describe method here)
-
-ARGUMENT::  ... vals
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: set
-(describe method here)
-
-ARGUMENT::  ... pairs
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: rw
-(describe method here)
-
-ARGUMENT:: setFFspeed
-(describe argument here)
-
-ARGUMENT::  ... pairs
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: routing
-(describe method here)
-
-ARGUMENT::  ... vals
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: unroute
-(describe method here)
-
-ARGUMENT::  ... vals
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: speed
-(describe method here)
-
-ARGUMENT:: setSpeed
-(describe argument here)
-
-ARGUMENT:: ramp
-(describe argument here)
-
-ARGUMENT:: hard
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: ff
-(describe method here)
-
-ARGUMENT:: setFFspeed
-(describe argument here)
-
-ARGUMENT::  ... pairs
-(describe argument here)
-
-returns:: (describe returnvalue here)
-
-METHOD:: play
-(describe method here)
-
-ARGUMENT::  ... pairs
-(describe argument here)
-
-returns:: (describe returnvalue here)
 
 METHOD:: parent
-(describe method here)
 
-returns:: (describe returnvalue here)
-
-METHOD:: init
-(describe method here)
-
-returns:: (describe returnvalue here)
+returns:: The parent link::Classes/TWGVideoControl:: object
 
 METHOD:: index
-(describe method here)
 
-returns:: (describe returnvalue here)
+returns:: Bus index of this link::Classes/TWGVideoBusControl::
 
-METHOD:: reset
-(describe method here)
+METHOD:: routing
+Set audio routing for this bus.
 
-ARGUMENT::  ... pairs
-(describe argument here)
+ARGUMENT::  ... vals
+Output channel or channels to connect to this bus audio. Channel names are code::\ear1::, code::\ear2::, code::\ear3::, code::\room::, code::\xtra::, and code::\phones::.
 
-returns:: (describe returnvalue here)
+returns:: An array of currently connected output channes.
 
-METHOD:: position
-(describe method here)
+METHOD:: route
+Route this bus to a channel or channels without otherwise changing current routing matrix.
+
+ARGUMENT::  ... vals
+Output channel or channels to connect.
+
+METHOD:: unroute
+Unroute this bus from a channel or channels without otherwise changing current routing matrix.
+
+ARGUMENT::  ... vals
+Output channel or channels to disconnect.
+
+
+
+METHOD:: media
+Get or set bus media
 
 ARGUMENT:: val
-(describe argument here)
+Media index
 
 ARGUMENT:: hard
-(describe argument here)
+If link::Classes/False::, update local data structures and GUI only (do not send a message to the server)
 
-returns:: (describe returnvalue here)
+METHOD:: position
+Get or set bus position
+
+ARGUMENT:: val
+Position percentage value (0-100)
+
+ARGUMENT:: hard
+(See above)
+
+METHOD:: speed
+Get or set bus speed
+
+ARGUMENT:: val
+Speed value
+
+ARGUMENT:: ramp
+Ramp time in seconds (optional)
+
+ARGUMENT:: curve
+Ramp curve (optional). Can be given as a symbol or integer index. See code::Env.shapeNames:: for a list of available values.
+
+ARGUMENT:: pitch
+Set global pitch compensation flag. If link::Classes/True::, pitch shifting will be applied to match the pitch of the original audio, even when playback speed has changed.
+
+ARGUMENT:: hard
+(See above)
+
+METHOD:: loop
+Get or set bus loop state
+
+ARGUMENT:: on
+Looping on/off value (Boolean or integer)
+
+ARGUMENT:: start
+Loop start position value (0-100)
+
+ARGUMENT:: end
+Loop end position value (0-100)
+
+ARGUMENT:: hard
+(See above)
+
+METHOD:: loopstart
+Set loop start position
+
+ARGUMENT:: val
+Position value (0-100)
+
+ARGUMENT:: hard
+(See above)
+
+METHOD:: loopend
+Set loop end position
+
+ARGUMENT:: val
+Position value (0-100)
+
+ARGUMENT:: hard
+(See above)
+
+METHOD:: db
+Set bus volume
+
+ARGUMENT:: val
+Volume in decibels
+
+ARGUMENT:: hard
+(See above)
+
+METHOD:: transport
+Set bus transport state
+
+ARGUMENT:: val
+Transport state as symbol. Possible values: code::\playing::, code::\paused::, code::\rw::, code::\ff::.
+
+ARGUMENT:: hard
+(See above)
+
+METHOD:: play
+Set bus transport state to code::\playing::.
+
+ARGUMENT::  ... pairs
+Set additional bus properties with key/value pairs
+
+METHOD:: pause
+Set bus transport state to code::\paused::.
+
+ARGUMENT::  ... pairs
+Set additional bus properties with key/value pairs
+
+METHOD:: ff
+Set bus transport state to code::\ff::.
+
+ARGUMENT:: val
+Set new global fastforward/rewind speed multiplier
+
+ARGUMENT::  ... pairs
+Set additional bus properties with key/value pairs
+
+ARGUMENT:: hard
+(See above)
+
+METHOD:: rw
+Set bus transport state to code::\rw::.
+
+ARGUMENT:: val
+Set new global fastforward/rewind speed multiplier
+
+ARGUMENT::  ... pairs
+Set additional bus properties with key/value pairs
+
+METHOD:: set
+Set bus properties
+
+ARGUMENT::  ... pairs
+Key/value pairs for properties to be set
+
+METHOD:: reset
+Reset this bus. Equivalent to code::.pause(\media, 0, \position, 0, \speed, 1, \db, 0, \loop, [false, 0, 100], \routing, [])::.
+
+ARGUMENT::  ... pairs
+Override reset command with given key/value pairs
 
 
-EXAMPLES::
+METHOD:: cue
+Cue this bus. Arguments will be overwritten with default values if not provided.
 
-code::
-(some example code)
-::
+ARGUMENT:: media
+Media index (Default: 0)
+
+ARGUMENT:: position
+Position percentage (Default: 0)
+
+ARGUMENT:: speed
+Speed value (Default: 1)
+
+ARGUMENT:: db
+Volume (Default: 0)
+
+ARGUMENT:: loop
+Loop state (Default: false)
+
+

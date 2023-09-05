@@ -155,13 +155,12 @@ TWGVideoControl {
     this.set(\transport, \paused, *pairs);
   }
 
-  ff { |setFFspeed ...pairs|
-    this.ffspeed_(setFFspeed);
-    this.set(\transport, \ff, *pairs);
+  ff { |val ...pairs|
+    this.set(\transport, \ff, \ffspeed, val, *pairs);
   }
 
-  rw { |setFFspeed ...pairs|
-    this.set(\transport, \rw, \ffspeed, setFFspeed, *pairs);
+  rw { |val ...pairs|
+    this.set(\transport, \rw, \ffspeed, val, *pairs);
   }
 
   cue { |media, position, speed, db, loop|
@@ -189,16 +188,25 @@ TWGVideoControl {
     this.set(\position, val);
   }
 
-  speed_ { |...vals|
-    this.set(\speed, vals); // update to match TWGVideoBusControl
+  speed_ { |val, ramp = 0, curve = 3, pitch = 0|
+    if (val.isArray) {
+      ramp = val[1] ? 0;
+      curve = val[2] ? 3;
+      pitch = val[3].asBoolean.asInteger ? 0;
+      val = val[0];
+    };
+    this.set(\speed, [val, ramp, curve, pitch]);
   }
 
   db_ { |val|
     this.set(\db, val);
   }
 
-  loop_ { |...vals|
-    this.set(\loop, vals); // update to match TWGVideoBusControl
+  loop_ { |on, start, end|
+		if (on.isArray) {
+      # on, start, end = on
+		};
+    this.set(\loop, [on, start, end]);
   }
 
   transport_{ |val|

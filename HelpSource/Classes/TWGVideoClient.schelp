@@ -4,9 +4,9 @@ categories:: TWGVideo
 related:: Classes/TWGVideoServer, Classes/TWGVideoControl, Guides/TWGVideo Setup and API
 
 DESCRIPTION::
-TWGVideo is a library of classes developed to facilitate the control and synchronization of five audiovisual channels (buses) across a network with VCR-style functionalilty.
+TWGVideo is a library of classes developed to facilitate the control and synchronization of five audiovisual channels (buses) across a network with VCR-style playback control.
 
-link::Classes/TWGVideoClient:: works in tandem with a link::Classes/TWGVideoControl:: object, which contains a wide range of convenience methods for sending control messages to the connected link::Classes/TWGVideoServer::. Methods can be executed directly in SuperCollider or through the link::Classes/TWGVideoClientGUI:: which opens in a window upon startup.
+link::Classes/TWGVideoClient:: works in tandem with a link::Classes/TWGVideoControl:: object, which contains a wide range of convenience methods for sending control messages to the connected link::Classes/TWGVideoServer::. Methods can be executed directly or through the link::Classes/TWGVideoClientGUI:: which opens in a window upon startup.
 
 
 CLASSMETHODS::
@@ -23,7 +23,9 @@ The link::Classes/NetAddr:: of the link::Classes/TWGVideoServer:: to which this 
 ARGUMENT:: mode
 Optionally initiate the client's strong::mode:: variable. If set to code::control::, the client will operate with full functionality. If anything else, the client will open in "monitor" mode, meaning it will receive and display information from the server in the GUI but will not send control messages.
 
-returns:: This client's child link::Classes/TWGVideoControl:: object. **Note: The code::.new:: method returns a link::Classes/TWGVideoControl:: object for convenience so that the instance variable used on initiation can immeiately be used to call control methods. To access link::Classes/TWGVideoClient::, use the code::TWGVideoControl.client:: method.
+returns:: This client's child link::Classes/TWGVideoControl:: object.
+
+NOTE::The code::.new:: method returns the client's child link::Classes/TWGVideoControl:: object. To access link::Classes/TWGVideoClient::, use code::TWGVideoControl.client::.::
 
 
 INSTANCEMETHODS::
@@ -48,6 +50,8 @@ Get or set the client's mode (see above).
 
 METHOD:: connect
 Try to establish a connection with the server. This method is called by clicking the "Reconnect" button in the GUI window.
+ARGUMENT:: address
+A link::Classes/NetAddr:: containing the IP and port of the server to be contacted. If none given, the client will try to connect to the NetAddr provided on initiation.
 
 METHOD:: connected
 
@@ -55,11 +59,21 @@ returns:: link::Classes/True:: if the client has successfully established a conn
 
 METHOD:: gui
 
-returns:: This client's child link::Classes/TWGVideoControl:: object.
+returns:: This client's child link::Classes/TWGVideoClientGUI:: object.
 
 
 EXAMPLES::
 
 code::
-(some example code)
+// Open a new client connected to a local server
+v = TWGVideoClient("larry", NetAddr("localhost", 57120))
+
+// Change the OSC port
+v.client.connect(NetAddr("localhost", 57121))
+
+// Switch to monitor mode
+v.client.mode = \monitor
+
+// Quit
+v.client.quit
 ::
