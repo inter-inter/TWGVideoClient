@@ -112,8 +112,7 @@ TWGVideoBusControl {
       if (hard) {this.set(\loop, [loop, loopstart, loopend])};
       {
         parent.client.gui.bLoopTog[index].value_(loop);
-        parent.client.gui.bLoopSlider[index].lo_(loopstart * 0.01);
-        parent.client.gui.bLoopSlider[index].hi_(loopend * 0.01);
+        parent.client.gui.bLoopSlider[index].lo_(loopstart * 0.01).hi_(loopend * 0.01).knobColor_([Color.grey, Color.yellow][loop.asInteger]);
       }.defer;
 		}
 	}

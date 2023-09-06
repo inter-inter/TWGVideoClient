@@ -25,9 +25,8 @@ TWGVideoClient {
           gui.mediaList = msg[3..].sort({|a, b| a.asString[..2].asInteger < b.asString[..2].asInteger});
           gui.mediaNums = gui.mediaList.collect({|x| x.asString[..2].asInteger});
 					gui.showText.string = "Show: " + (msg[2] ?? "");
-					gui.bMediaMenu.do({ |menu, index| menu.items_([""] ++ gui.mediaList).value_(control.buses[index].media ?? 0);
-						}
-					);
+          gui.bMediaMenu.do({ |menu, index| menu.items_([""] ++ gui.mediaList).value_(0)});
+          //control.buses.do({|bus, i| bus.media_(bus.media ? 0, hard: false)})
 				}.defer},
 				\transport, {
 					bus = msg[2];

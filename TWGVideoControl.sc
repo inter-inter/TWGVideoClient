@@ -300,37 +300,3 @@ TWGVideoControl {
   }
 
 }
-
-
-
-//
-// {key == \media} {[0, 7, 14, 21, 28].do({|i| msg[i] = val})}
-// {key == \position} {[1, 8, 15, 22, 29].do({|i| msg[i] = val})}
-// {key == \speed} {
-//   var speed, ramp = 0, curve = 1, pitch = 0;
-//   case
-//   {val.isArray} {
-//     speed = val[0];
-//     ramp = val[1] ?? 0;
-//     curve = val[2] ?? 1;
-//     pitch = val[3].asBoolean.asInteger ?? 0;
-//   }
-//   {val.isNumber} {speed = val};
-//
-//   buses.do({|bus, i|
-//     msg[(i*7)+2] = speed.asString + ramp.asString + curve.asString + pitch.asString;
-//     buses[i].speed_(speed, hard: false);
-//   })
-// }
-// {key == \db} {
-//   buses.do({|bus, i|
-//     msg[(i*7)+5] = val;
-//     buses[i].db_(val, hard: false);
-//   })
-// }
-// {key == \transport} {
-//   buses.do({|bus, i|
-//     msg[(i*7)+4] = (\playing: 1, \paused: 0, \ff: 2, \rw: -1)[val] ?? "n";
-//     buses[i].transport_(val, hard: false);
-//   })
-// }
