@@ -57,7 +57,8 @@ TWGVideoBusControl {
 			media = val;
 			{
         var gui = parent.client.gui;
-        gui.bMediaMenu[index].value_(gui.mediaList[gui.mediaNums.indexOf(val) ? 0])}.defer;
+        var menuIndex = (gui.mediaNums.indexOf(val.asInteger) ? -1) + 1;
+        gui.bMediaMenu[index].value_(menuIndex)}.defer;
 		}
 	}
 
