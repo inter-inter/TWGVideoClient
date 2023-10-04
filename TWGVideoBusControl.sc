@@ -52,14 +52,14 @@ TWGVideoBusControl {
 	}
 
 	media_ { |val, hard = true|
-		if (media != val) {
+		//if (media != val) {
 			if (hard) {this.set(\media, val)};
 			media = val;
 			{
         var gui = parent.client.gui;
         var menuIndex = (gui.mediaNums.indexOf(val.asInteger) ? -1) + 1;
         gui.bMediaMenu[index].value_(menuIndex)}.defer;
-		}
+		//}
 	}
 
 	position_ { |val, hard = true|
