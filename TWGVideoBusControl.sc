@@ -52,22 +52,22 @@ TWGVideoBusControl {
 	}
 
 	media_ { |val, hard = true|
-		if (media != val) {
+		//if (media != val) {
 			if (hard) {this.set(\media, val)};
 			media = val;
 			{
         var gui = parent.client.gui;
         var menuIndex = (gui.mediaNums.indexOf(val.asInteger) ? -1) + 1;
         gui.bMediaMenu[index].value_(menuIndex)}.defer;
-		}
+		//}
 	}
 
 	position_ { |val, hard = true|
-		if (position != val) {
+		//if (position != val) {
 			if (hard) {this.set(\position, val)};
 			position = val;
 			{parent.client.gui.setPos(index, val)}.defer;
-		}
+		//}
 	}
 
 	speed_ { |val, ramp = 0, curve = 3, pitch = 0, hard = true|
@@ -85,19 +85,19 @@ TWGVideoBusControl {
 	}
 
 	db_ { |val, hard = true|
-		if (db != val) {
+		//if (db != val) {
 			if (hard) {this.set(\db, val)};
 			db = val;
 			{parent.client.gui.setGain(index, db)}.defer;
-		}
+		//}
 	}
 
 	transport_ { |val, hard = true|
-		if (transport != val) {
+		//if (transport != val) {
 			if (hard) {this.set(\transport, val)};
 			transport = val;
 			{parent.client.gui.setTransport(index, transport)}.defer;
-		}
+		//}
 	}
 
   loop_ { |on, start, end, hard = true|
@@ -105,7 +105,7 @@ TWGVideoBusControl {
       # on, start, end = on
 		};
 
-    if (((loop == on) && (loopstart == start) && (loopend == end)).not ? true) {
+    //if (((loop == on) && (loopstart == start) && (loopend == end)).not ? true) {
       loop = on ? loop ? 0;
       loopstart = start ? loopstart ? 0;
       loopend = end ? loopend ? 100;
@@ -114,23 +114,23 @@ TWGVideoBusControl {
         parent.client.gui.bLoopTog[index].value_(loop);
         parent.client.gui.bLoopSlider[index].lo_(loopstart * 0.01).hi_(loopend * 0.01).knobColor_([Color.grey, Color.yellow][loop.asInteger]);
       }.defer;
-		}
+		//}
 	}
 
   loopstart_ { |val, hard = true|
-    if (loopstart != val) {
+    //if (loopstart != val) {
       loopstart = val ? loopstart;
 			if (hard) {this.set(\loop, [loop, loopstart, loopend])};
 			{parent.client.gui.bLoopSlider[index].lo_(loopstart * 0.01)}.defer;
-		}
+		//}
   }
 
   loopend_ { |val, hard = true|
-    if (loopend != val) {
+    //if (loopend != val) {
       loopend = val ? loopend;
 			if (hard) {this.set(\loop, [loop, loopstart, loopend])};
 			{parent.client.gui.bLoopSlider[index].hi_(loopend * 0.01)}.defer;
-		}
+		//}
   }
 
 	routing {
