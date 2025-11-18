@@ -20,14 +20,16 @@ TWGVideoClient {
 			connected = true;
 			{gui.connectedText.string = "Connected to" + serverAddress.hostname.asString}.defer;
 			//msg.postln;
-			switch (key,
-				\showinfo, {{
-          gui.mediaList = msg[3..].sort({|a, b| a.asString[..2].asInteger < b.asString[..2].asInteger});
-          gui.mediaNums = gui.mediaList.collect({|x| x.asString[..2].asInteger});
-					gui.showText.string = "Show: " + (msg[2] ?? "");
-          gui.bMediaMenu.do({ |menu, index| menu.items_([""] ++ gui.mediaList).value_(0)});
-          control.buses.do({|bus, i| bus.media_(bus.media ? 0, hard: false)})
-				}.defer},
+      switch (key,
+        \showinfo, {
+          {
+            gui.mediaList = msg[3..].sort({|a, b| a.asString[..2].asInteger < b.asString[..2].asInteger});
+            gui.mediaNums = gui.mediaList.collect({|x| x.asString[..2].asInteger});
+            gui.showText.string = "Show: " + (msg[2] ?? "");
+            gui.bMediaMenu.do({ |menu, index| menu.items_([""] ++ gui.mediaList)});
+            control.buses.do({|bus, i| bus.media_(bus.media ? 0, hard: false)})
+          }.defer;
+        },
 				\transport, {
 					bus = msg[2];
 					val = (0: \paused, 1: \playing, -1: \rw, 2: \ff)[msg[3]];
